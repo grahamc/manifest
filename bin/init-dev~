@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if docker-machine status dev | grep -vq Stopped; then
+	
+fi
+
