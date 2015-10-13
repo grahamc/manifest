@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote
+    name="origin"
+    fetch=".."
+    />
+  <default
+    remote="origin"
+    revision="master"
+    sync-j="8"
+    />
+  <project name="manifest" path="projects/manifest" />
+</manifest>
+  
