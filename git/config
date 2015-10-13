@@ -1,0 +1,21 @@
+[advice]
+   statusHints = false
+
+[color]
+   branch = auto
+   diff = auto
+   interactive = auto
+   status = auto
+   ui = auto
+
+[core]
+   excludesfile = ~/.gitignore-global
+   whitespace = -blank-at-eof, tab-in-indent
+
+[help]
+   autocorrect = 1
+
+[user]
+   email = graham@grahamc.com
+   name = Graham Christensen
+   signingkey = 98C1030F
