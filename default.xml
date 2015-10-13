@@ -9,6 +9,9 @@
     revision="master"
     sync-j="8"
     />
-  <project name="manifest" path="projects/manifest" />
+
+  <project name="manifest" path="projects/manifest">
+    <linkfile src="bin" dest="bin" />
+  </project>
 </manifest>
   
