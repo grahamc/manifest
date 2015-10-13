@@ -12,6 +12,7 @@
 
   <project name="manifest" path="projects/manifest">
     <linkfile src="bin" dest="bin" />
+    <linkfile src="profile.sh" dest=".profile" />
   </project>
 </manifest>
   
