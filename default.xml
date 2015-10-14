@@ -2,7 +2,7 @@
 <manifest>
   <remote
     name="origin"
-    fetch=".."
+    fetch="ssh://git@github.com/"
     />
   <default
     remote="origin"
@@ -10,14 +10,17 @@
     sync-j="8"
     />
 
-  <project name="manifest" path="projects/manifest">
+  <project name="grahamc/manifest" path="projects/manifest">
     <linkfile src="bin" dest="bin" />
+
     <linkfile src="profile.sh" dest=".profile" />
+    <linkfile src="zshrc" dest=".zshrc" />
 
     <linkfile src="emacs/init.el" dest=".emacs.d/init.el" />
 
     <linkfile src="git/config" dest=".gitconfig" />
     <linkfile src="git/gitignore-global" dest=".gitignore-global" />
   </project>
+
+  <project name="robbyrussell/oh-my-zsh" path=".oh-my-zsh" />
 </manifest>
-  
