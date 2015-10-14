@@ -6,6 +6,10 @@
   Note that this should end with a directory separator.
   See also `locate-user-emacs-file'."))
 
+; Homebrew
+(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+    (normal-top-level-add-subdirs-to-load-path))
+
 ; Whitespace handling
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq-default indent-tabs-mode nil)
@@ -21,6 +25,8 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
 (package-refresh-contents)
 
@@ -32,3 +38,4 @@
 (package-install 'diff-hl)
 (package-install 'python-mode)
 (package-install 'js)
+(package-install 'json-mode)
