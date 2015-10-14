@@ -12,7 +12,9 @@
 
   <project name="grahamc/manifest" path="projects/manifest">
     <linkfile src="bin" dest="bin" />
+
     <linkfile src="profile.sh" dest=".profile" />
+    <linkfile src="zshrc" dest=".zshrc" />
 
     <linkfile src="emacs/init.el" dest=".emacs.d/init.el" />
 
