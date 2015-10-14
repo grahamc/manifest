@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -e
+set -u
+set -o pipefail
+
+function origin {
+    git remote -v \
+        | head -1 \
+        | awk '{print $2}'
+}
+
+function branch_name {
+    git symbolic-ref -q HEAD \
+        | rev \
+        | cut -d/ -f1 \
+        | rev
+}
+
+function tree_sha {
+    git rev-parse HEAD
+}
+
+function branch_name_or_tree_sha {
+    branch_name || tree_sha
+}
+
+function url {
+    local _origin="$(origin)"
+    local _ref="$(branch_name_or_tree_sha)"
+
+    case "$_origin" in
+        *git@github.com:*)
+            local project=$(echo "$_origin" | cut -d":" -f2)
+            echo "https://github.com/$project/tree/$_ref"
+            ;;
+        *git@github.com/*)
+            local project=$(echo "$_origin" | rev | cut -d"/" -f1,2 | rev)
+            echo "https://github.com/$project/tree/$_ref"
+            ;;
+        *)
+            echo "Cannot guess HTTP URL for $_origin" 1>&2
+            exit 1
+    esac
+}
+
+open "$(url)"
