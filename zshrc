@@ -28,3 +28,5 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(docker docker-compose golang git repo)
 
 source $ZSH/oh-my-zsh.sh
+
+source ~/.profile
