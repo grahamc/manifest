@@ -14,7 +14,7 @@ if ! docker-machine status $MACHINE > /dev/null 2> /dev/null; then
     $MACHINE 1>&2
 fi
 
-if docker-machine status $MACHINE 2> /dev/null | grep -q Stopped > /dev/null; then
+if docker-machine status $MACHINE 2> /dev/null | grep -q "Stopped\|Saved" > /dev/null; then
     # Machine exists but is stopped
     docker-machine start $MACHINE 1>&2
 fi
