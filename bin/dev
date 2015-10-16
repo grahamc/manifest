@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 set -u
@@ -24,8 +24,6 @@ eval $(docker-machine env $MACHINE)
 
 # Echo a correct export command, note: if any of the parameters have spaces
 # in it, this will probably not work.
-echo -n "export "
+/bin/echo -n "export "
 env | grep DOCKER | xargs echo
 echo "Ready to go with $MACHINE." 1>&2
-
-
