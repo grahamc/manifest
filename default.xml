@@ -23,4 +23,6 @@
   </project>
 
   <project name="robbyrussell/oh-my-zsh" path=".oh-my-zsh" />
+
+  <project name="grahamc/shoutcast" path="projects/shoutcast" />
 </manifest>
