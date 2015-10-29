@@ -19,6 +19,9 @@
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment 'utf-8)
 
+;; Display column numbers
+(column-number-mode)
+
 
 ; Backup / autosave to ~/.emacs.d/ to prevent polluting project directories
 (defvar backup-dir (expand-file-name "~/.emacs.d/backup/"))
@@ -37,6 +40,9 @@
 (package-refresh-contents)
 
 (package-install 'color-theme-solarized)
+(package-install 'fill-column-indicator)
+(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+  (global-fci-mode 1)
 (package-install 'markdown-mode)
 (package-install 'yaml-mode)
 (package-install 'rust-mode)
