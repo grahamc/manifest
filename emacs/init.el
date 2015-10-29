@@ -56,7 +56,7 @@
 (package-install 'coffee-mode)
 (package-install 'diff-hl)
 (package-install 'python-mode)
-(package-install 'js)
+(package-install 'js2-mode)
 (package-install 'json-mode)
 
 ;; osx copy and paste and cut
@@ -87,3 +87,9 @@
 (global-set-key (kbd "C-c g") 'gist)
 
 
+;; js mode
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+;; indent with spaces
+(setq js2-mode-hook
+      '(lambda () (progn
+                    (set-variable 'indent-tabs-mode nil))))
