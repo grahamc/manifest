@@ -22,6 +22,8 @@
 ;; Display column numbers
 (column-number-mode)
 
+; Bind meta
+(global-set-key (kbd "<ESC> <ESC>") 'dabbrev-expand)
 
 ; Backup / autosave to ~/.emacs.d/ to prevent polluting project directories
 (defvar backup-dir (expand-file-name "~/.emacs.d/backup/"))
