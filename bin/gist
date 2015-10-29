@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# Usage:
+# cat myfile | gist
+# gist myfile
+
+set -e
+set -u
+
+inputfile=$(mktemp /tmp/gist.XXXXXXXXXXXXXXXXX)
+prettyfile=$(mktemp /tmp/gist.XXXXXXXXXXXXXXXX).html
+
+function cleanup {
+    rm -f "$inputfile" "$prettyfile"
+}
+trap cleanup EXIT
+
+cat "$@" > "$inputfile"
+
+$(dev) 1> /dev/null 2> /dev/null
+
+function dockerfile {
+    echo "FROM python:3"
+    echo "RUN pip install Pygments"
+}
+
+function build {
+    dockerfile | docker build -t pygments -
+}
+
+docker inspect pygments > /dev/null 2> /dev/null || build
+
+function highlight {
+    cat  | docker run --rm -i pygments pygmentize \
+                  -f html \
+                  -O full \
+                  -O style=default \
+                  -O linenos=table \
+                  -O lineanchors=y \
+                  -O anchorlinenos=y
+}
+
+cat "$inputfile" | highlight > "$prettyfile"
+name="$(basename "$prettyfile")"
+aws s3 \
+    cp \
+    --profile paste \
+    --acl public-read \
+    "$prettyfile" "s3://s.gsc.io/$name"
+
+open "http://s.gsc.io/$name"
