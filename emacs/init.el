@@ -6,16 +6,16 @@
   Note that this should end with a directory separator.
   See also `locate-user-emacs-file'."))
 
-; Homebrew
+;; Homebrew
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-    (normal-top-level-add-subdirs-to-load-path))
+  (normal-top-level-add-subdirs-to-load-path))
 
 ;; Custom programs
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/:~/bin"))
 (setq exec-path (append exec-path '("~/bin")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
-; Whitespace handling
+;; Whitespace handling
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq-default indent-tabs-mode nil)
 (prefer-coding-system 'utf-8)
