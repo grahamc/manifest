@@ -10,6 +10,11 @@
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
     (normal-top-level-add-subdirs-to-load-path))
 
+;; Custom programs
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/:~/bin"))
+(setq exec-path (append exec-path '("~/bin")))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+
 ; Whitespace handling
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq-default indent-tabs-mode nil)
@@ -72,3 +77,13 @@
 (global-set-key (kbd "C-c c") 'pbcopy)
 (global-set-key (kbd "C-c v") 'pbpaste)
 (global-set-key (kbd "C-c x") 'pbcut)
+
+;; gist a region
+(defun gist ()
+  (interactive)
+  (call-process-region (point) (mark) "gist")
+  (setq deactivate-mark t))
+
+(global-set-key (kbd "C-c g") 'gist)
+
+
