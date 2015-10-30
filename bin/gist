@@ -30,6 +30,35 @@ function build {
 
 docker inspect pygments > /dev/null 2> /dev/null || build
 
+function custom_css {
+    sed -e 's/$/\\/' <<EOF
+.highlighttable {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+body {
+    background-color: #fff;
+    width: 790px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+td.linenos {
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding-right: 5px;
+    min-width: 25px;
+    text-align: right;
+}
+
+a {
+    color: lightgray;
+    text-decoration: none;
+}
+EOF
+}
+
 function highlight {
     cat  | docker run --rm -i pygments pygmentize \
                   -f html \
@@ -37,15 +66,10 @@ function highlight {
                   -O style=default \
                   -O linenos=table \
                   -O lineanchors=y \
-                  -O anchorlinenos=y
+                  -O anchorlinenos=y \
+          | sed -e "s@</style>@$(custom_css)</style>@"
 }
 
 cat "$inputfile" | highlight > "$prettyfile"
-name="$(basename "$prettyfile")"
-aws s3 \
-    cp \
-    --profile paste \
-    --acl public-read \
-    "$prettyfile" "s3://s.gsc.io/$name"
 
-open "http://s.gsc.io/$name"
+share "$prettyfile"
