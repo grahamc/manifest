@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+import argparse
+import random
+import subprocess
+import os
+import tempfile
+import sys
+from contextlib import contextmanager
+from pprint import pprint
+
+parser = argparse.ArgumentParser(description='Share one file by' \
+                                 ' uploading it to S3 and returning '\
+                                 ' the URL')
+
+parser.add_argument('--copy', dest='copy', action='store_true')
+parser.add_argument('--no-copy', dest='copy', action='store_false')
+parser.set_defaults(copy=True)
+
+parser.add_argument('--open', dest='open', action='store_true')
+parser.add_argument('--no-open', dest='open', action='store_false')
+parser.set_defaults(open=True)
+
+parser.add_argument('-n', '--name', dest='name')
+
+parser.add_argument('file', nargs='?', default='-')
+
+opts = parser.parse_args()
+
+def random_string(length=6):
+    alphabet = list('abcdefghjkmnpqrstuvwxyz23456789')
+    return ''.join(random.choice(alphabet) for _ in range(length))
+
+def name(file):
+    prefix = random_string()
+
+    if file == '-':
+        return prefix
+
+    return '{}-{}'.format(prefix, os.path.basename(file))
+
+@contextmanager
+def uploadable_file(src):
+
+    if src != '-':
+        yield src
+    else:
+        fd, tmp_src = tempfile.mkstemp()
+        try:
+            with open(tmp_src, 'wb') as f:
+                while True:
+                    buffer = sys.stdin.read(1024 * 1024)
+                    if not buffer:
+                        break
+                    f.write(buffer)
+            yield tmp_src
+        finally:
+            os.remove(tmp_src)
+
+def upload(file, name):
+    subprocess.check_call(
+        [
+            'aws', 's3', 'cp',
+            '--profile', 'paste',
+            '--acl', 'public-read',
+            file, 's3://s.gsc.io/{}'.format(name)
+        ],
+        stdout=sys.stderr
+    )
+
+    return 'http://s.gsc.io/{}'.format(name)
+
+def copy(string):
+    r, w = os.pipe()
+    os.write(w, string)
+    os.close(w)
+
+    subprocess.check_call(['pbcopy'],
+                          stdin=r
+    )
+
+def open_url(string):
+    subprocess.check_call([
+        'open',
+        string
+    ])
+
+name = opts.name or name(opts.file)
+
+with uploadable_file(opts.file) as path:
+    url = upload(path, name)
+
+if opts.copy:
+    copy(url)
+
+if opts.open:
+    open_url(url)
+
+print(url)
