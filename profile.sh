@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export PATH="$PATH:$HOME/bin"
-export EDITOR="emacsclient"
+export EDITOR="emacsclient -c"
 
 alias edit="$EDITOR"
 
