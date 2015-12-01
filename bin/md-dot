@@ -1,0 +1,68 @@
+#!/usr/bin/env python3
+
+import tempfile
+import subprocess
+import fileinput
+import sys
+import os
+
+"""
+Take a file on stdin, convert any ```dot...``` segments into a rendered
+image which is `share`'d to s.gsc.io, and output the image's URL to
+the markdown.
+"""
+
+
+class Renderer:
+    def __init__(self):
+        self.stdin, self.lines = os.pipe()
+
+    def append_line(self, line):
+        if line.strip() == '```dot' or line.strip() == '```':
+            pass
+        else:
+            os.write(self.lines, bytes(line, encoding='utf-8'))
+
+    def render(self):
+        fd, filename = tempfile.mkstemp(suffix='.png')
+        try:
+            os.close(self.lines)
+            subprocess.check_call(
+                ['dot', '-Tpng', '-o', filename],
+                stdin=self.stdin,
+                stderr=sys.stderr
+            )
+            os.close(self.stdin)
+
+            read, write = os.pipe()
+            subprocess.check_call(
+                ['share', '--no-copy', '--no-open', filename],
+                stdout=write
+            )
+            url = os.read(read, 1024).decode('utf-8').strip()
+            os.close(write)
+            os.close(read)
+        finally:
+            os.remove(filename)
+
+        self.__init__()
+
+        return str(url)
+
+renderer = Renderer()
+render_mode = False
+
+for line in fileinput.input():
+    if line.strip() == '```dot':
+        render_mode = True
+
+    if render_mode:
+        renderer.append_line(line)
+
+        if line.strip() == '```':
+            render_mode = False
+            url = renderer.render()
+            line = "![]({})\n".format(url)
+
+    if not render_mode:
+        sys.stdout.write(line)
