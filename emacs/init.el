@@ -16,6 +16,7 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
 ;; Whitespace handling
+(setq-default sentence-end-double-space nil)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq-default indent-tabs-mode nil)
 (prefer-coding-system 'utf-8)
@@ -23,6 +24,13 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-language-environment 'utf-8)
+
+;; Ido
+(require 'ido)
+(ido-mode t)
+(setq-default ido-enable-flex-matching t)
+(setq-default ido-everywhere t)
+(ido-mode 1)
 
 ;; Display column numbers
 (column-number-mode)
@@ -58,6 +66,18 @@
 (package-install 'python-mode)
 (package-install 'js2-mode)
 (package-install 'json-mode)
+(package-install 'git-commit)
+(package-install 'flycheck)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; org mode
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . nil)
+   (python . t)
+   (sh     . t)
+   ))
+(setf org-babel-default-header-args:org '((:exports . "both")))
 
 ;; osx copy and paste and cut
 (defun pbcopy ()
