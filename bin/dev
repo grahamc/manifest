@@ -5,24 +5,42 @@ set -u
 
 readonly MACHINE=dev
 
-if ! docker-machine status $MACHINE > /dev/null 2> /dev/null; then
-  # The machine doesn't exist
-  docker-machine create          \
-    --driver virtualbox             \
-    --virtualbox-disk-size 40000    \
-    --virtualbox-memory 8192        \
-    $MACHINE 1>&2
-fi
+function start {
+    if ! docker-machine status $MACHINE; then
+        # The machine doesn't exist
+        docker-machine create                          \
+                       --driver virtualbox             \
+                       --virtualbox-disk-size 40000    \
+                       --virtualbox-memory 8192        \
+                       $MACHINE
+    fi
 
-if [ "x${1:-}" = "x--restart" ]; then
-    echo "Stopping $MACHINE for --restart" 1>&2
-    docker-machine stop $MACHINE 2>&1
-fi
+    if [ "x${1:-}" = "x--restart" ]; then
+        echo "Stopping $MACHINE for --restart"
+        docker-machine stop $MACHINE
+    fi
 
-if docker-machine status $MACHINE 2> /dev/null | grep -q "Stopped\|Saved" > /dev/null; then
-    # Machine exists but is stopped
-    docker-machine start $MACHINE 1>&2
-fi
+    if docker-machine status $MACHINE | grep -q "Stopped\|Saved"; then
+        # Machine exists but is stopped
+        docker-machine start $MACHINE
+    fi
+
+    while docker-machine status $MACHINE | grep -vq "Running"; do
+        sleep 1
+    done
+
+    eval $(docker-machine env $MACHINE)
+    if ! docker run -it --rm busybox:latest ping -w1 -c1 4.2.2.1; then
+        docker-machine restart $MACHINE
+    fi
+
+    while docker-machine status $MACHINE | grep -vq "Running"; do
+        sleep 1
+    done
+}
+
+
+start "${1:-}" 2>&1 | sed -e "s/^/ ----> /" 1>&2
 
 # Eval the configuration
 eval $(docker-machine env $MACHINE)
