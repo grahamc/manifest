@@ -78,6 +78,8 @@
    (sh     . t)
    ))
 (setf org-babel-default-header-args:org '((:exports . "both")))
+(setq org-directory "~/org")
+(setq org-babel-python-command "/usr/local/bin/python3")
 
 ;; osx copy and paste and cut
 (defun pbcopy ()
@@ -113,3 +115,7 @@
 (setq js2-mode-hook
       '(lambda () (progn
                     (set-variable 'indent-tabs-mode nil))))
+
+;; end / home
+(global-set-key (kbd "<end>") 'end-of-line)
+(global-set-key (kbd "<home>") 'beginning-of-line)
