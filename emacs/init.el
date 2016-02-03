@@ -7,8 +7,10 @@
   See also `locate-user-emacs-file'."))
 
 ;; Homebrew
-(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
+(if (file-accessible-directory-p "/usr/local/share/emacs/site-lisp")
+    (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+      (normal-top-level-add-subdirs-to-load-path))
+  )
 
 ;; Custom programs
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin/:~/bin"))
