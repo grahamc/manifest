@@ -19,3 +19,12 @@
    email = graham@grahamc.com
    name = Graham Christensen
    signingkey = 98C1030F
+
+[transfer]
+   fsckObjects = true
+
+[fetch]
+   fsckObjects = true
+
+[receive]
+   fsckObjects = true
