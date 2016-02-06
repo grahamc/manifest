@@ -24,6 +24,6 @@
 
   <project name="robbyrussell/oh-my-zsh" path=".oh-my-zsh" />
 
-  <project name="nixos/nixpkgs" path="projects/nixpkgs" />
+  <project name="nixos/nixpkgs" path="projects/nixpkgs" revision="release-15.09" />
   <project name="grahamc/shoutcast" path="projects/shoutcast" />
 </manifest>
