@@ -9,6 +9,7 @@
    ui = auto
 
 [core]
+   attributesfile = ~/.gitattributesfile-global
    excludesfile = ~/.gitignore-global
    whitespace = -blank-at-eof, tab-in-indent
 

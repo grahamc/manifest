@@ -20,6 +20,7 @@
 
     <linkfile src="git/config" dest=".gitconfig" />
     <linkfile src="git/gitignore-global" dest=".gitignore-global" />
+    <linkfile src="git/gitattributesfile-global" dest=".gitattributesfile-global" />
   </project>
 
   <project name="robbyrussell/oh-my-zsh" path=".oh-my-zsh" />
